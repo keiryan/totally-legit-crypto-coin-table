@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import "./App.css";
 import {
@@ -17,7 +17,9 @@ import {
   Symbol,
   Line,
   ChartContiner,
-  CoinNameAndIcon,
+  NameAndIcon,
+  SupplementaryLetters,
+  FilterCaret,
 } from "./styles.app.js";
 import CoinNumber from "./CoinNumber/coinnnumber.js";
 import ProgressBar from "./Progress Bar/progress.js";
@@ -31,33 +33,97 @@ export const theme = {
 
 const fiatSymbol = "$";
 
-const CoinTable = ({ coins }) => {
-  const [expanded, setExpanded] = useState({ expanded: false });
+function NameAndCaret({ handleSort, children, identity }) {
+  return (
+    <NameAndIcon id={identity} onClick={handleSort}>
+      {children}
+    </NameAndIcon>
+  );
+}
 
-  const handleClick = () => {
-    setExpanded({ expanded: !expanded.expanded });
+const CoinTable = ({ parentSetLoading }) => {
+  const [coins, setCoins] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getCoins = async (passedParams) => {
+    const defaultParams = {
+      vs_currency: "usd",
+      order: "market_cap_desc",
+      per_page: 50,
+      page: 1,
+      sparkline: true,
+      price_change_percentage: "1h%2C24h%2C7d",
+      ...passedParams,
+    };
+    const response = await axios(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${defaultParams.vs_currency}&order=${defaultParams.order}&per_page=${defaultParams.per_page}&page=${defaultParams.page}&sparkline=true&price_change_percentage=${defaultParams.price_change_percentage}`
+    );
+    setCoins([...response.data]);
+    parentSetLoading(false);
+    setLoading(false);
   };
 
-  const reference = useRef();
+  const handleSort = (params) => {
+    setLoading(true);
+    parentSetLoading(true);
+    getCoins(params);
+  };
 
-  return (
-    <Table ref={reference} expanded={expanded}>
+  useEffect(() => {
+    setTimeout(() => {
+      getCoins();
+    }, 2000);
+  }, []);
+
+  return loading ? (
+    <LoadingBalls />
+  ) : (
+    <Table>
       <Thead>
         <TableRow top>
           <TableHead coinName>
-            <CoinNameAndIcon>
-              <RowNumber onClick={handleClick} style={{ fontSize: "18px" }}>
+            <NameAndIcon
+              id="name"
+              onClick={() => handleSort({ order: "market_cap_desc" })}
+            >
+              <RowNumber style={{ fontSize: "18px" }}>
                 <Line />
               </RowNumber>
-              Name
-            </CoinNameAndIcon>
+              Name <FilterCaret />
+            </NameAndIcon>
           </TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>1h</TableHead>
-          <TableHead>24h</TableHead>
-          <TableHead>7d</TableHead>
-          <TableHead>24h Vol / Market Cap </TableHead>
-          <TableHead>Circulating / Total Sup </TableHead>
+          <TableHead>
+            <NameAndCaret
+              handleSort={() => handleSort({ order: "market_cap_asc" })}
+              identity="price"
+            >
+              Price
+            </NameAndCaret>
+          </TableHead>
+          <TableHead>
+            <NameAndCaret handleSort={handleSort} identity="1h">
+              1h
+            </NameAndCaret>
+          </TableHead>
+
+          <TableHead>
+            <NameAndCaret handleSort={handleSort} identity="24h">
+              24h
+            </NameAndCaret>
+          </TableHead>
+          <TableHead>
+            <NameAndCaret handleSort={handleSort} identity="7d">
+              7d
+            </NameAndCaret>
+          </TableHead>
+          <TableHead>
+            24h Vol / M<SupplementaryLetters>ar</SupplementaryLetters>k
+            <SupplementaryLetters>e</SupplementaryLetters>t Cap{" "}
+          </TableHead>
+          <TableHead>
+            Circ<SupplementaryLetters>ulating</SupplementaryLetters> / Total Sup
+            <SupplementaryLetters>ply</SupplementaryLetters>{" "}
+          </TableHead>
           <TableHead>last 7 days</TableHead>
         </TableRow>
       </Thead>
@@ -94,13 +160,18 @@ const CoinTable = ({ coins }) => {
               />
             </TableData>
             <TableData>
-              <ProgressBar max={item.market_cap} progress={item.total_volume} />
+              <ProgressBar
+                max={item.market_cap}
+                progress={item.total_volume}
+           
+              />
             </TableData>
             <TableData>
               {" "}
               <ProgressBar
                 max={item.total_supply}
                 progress={item.circulating_supply}
+              
               />
             </TableData>
             <TableData>
@@ -119,26 +190,11 @@ const CoinTable = ({ coins }) => {
 };
 
 export default function App() {
-  const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const getCoins = async () => {
-    const response = await axios(
-      "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d"
-    );
-    setCoins(response.data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      getCoins();
-    }, 2000);
-  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Container style={{ alignItems: loading ? "center" : "flex-start" }}>
-        {loading ? <LoadingBalls /> : <CoinTable coins={coins} />}
+        <CoinTable parentSetLoading={setLoading} />
       </Container>
     </ThemeProvider>
   );
