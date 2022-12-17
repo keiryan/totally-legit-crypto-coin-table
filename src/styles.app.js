@@ -14,11 +14,19 @@ export const Container = styled(Base)`
   font-family: "Poppins", sans-serif;
 `;
 
+export const SupplementaryLetters = styled.span`
+  @media (max-width: 1350px) {
+    display: none;
+  } ;
+`;
+
+export const TableContainer = styled(Base)``;
+
 export const Table = styled.table`
   border-radius: 4px;
   color: #fff;
   width: 100%;
-  min-width: 300px;
+  min-width: 1000px;
   max-width: 1350px;
   overflow: hidden;
   padding: 10px;
@@ -34,7 +42,7 @@ export const TableHead = styled.th`
   text-align: left;
 `;
 
-export const CoinNameAndIcon = styled.div`
+export const NameAndIcon = styled.div`
   display: flex;
   height: 100%;
   align-items: center;
@@ -116,5 +124,22 @@ export function Line() {
     >
       <rect width="8" height="1" fill="#FFBA49" rx="0.5"></rect>
     </svg>
+  );
+}
+
+export function FilterCaret() {
+  return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="10"
+        height="4"
+        fill="none"
+        viewBox="0 0 10 4"
+      >
+        <path
+          fill="#FFBA49"
+          d="M10 .47a.335.335 0 00-.123-.257.76.76 0 00-.34-.166 1.127 1.127 0 00-.433-.012.84.84 0 00-.364.145L5.01 2.88 1.284.18a.705.705 0 00-.216-.12A1.13 1.13 0 00.503.02a.904.904 0 00-.255.086.55.55 0 00-.177.143.317.317 0 00-.07.175.296.296 0 00.048.178C.085.66.139.71.208.753L4.47 3.845c.067.049.15.088.243.114a1.09 1.09 0 00.596 0 .779.779 0 00.243-.114L9.821.753C9.932.675 9.996.575 10 .47z"
+        ></path>
+      </svg>
   );
 }

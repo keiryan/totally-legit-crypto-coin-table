@@ -4,7 +4,7 @@ export const Number = styled.abbr`
   display: flex;
   align-items: center;
   gap: 6px;
-  color: ${(props) => (props.number > 0 ? "#56FF90" : "#FF5656")};
+  color: ${({ number }) => (number > 0 ? "#56FF90" : "#FF5656")};
 `;
 
 export function Up() {
@@ -25,18 +25,18 @@ export function Up() {
 }
 
 export function Down() {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="8"
-        height="5"
-        fill="none"
-        viewBox="0 0 8 5"
-      >
-        <path
-          fill="#FF5656"
-          d="M4.655 4.433a1 1 0 01-1.31 0L.831 2.256C.131 1.65.561.5 1.486.5h5.028c.926 0 1.354 1.15.655 1.756L4.655 4.433z"
-        ></path>
-      </svg>
-    );
-  }
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="8"
+      height="5"
+      fill="none"
+      viewBox="0 0 8 5"
+    >
+      <path
+        fill="#FF5656"
+        d="M4.655 4.433a1 1 0 01-1.31 0L.831 2.256C.131 1.65.561.5 1.486.5h5.028c.926 0 1.354 1.15.655 1.756L4.655 4.433z"
+      ></path>
+    </svg>
+  );
+}
