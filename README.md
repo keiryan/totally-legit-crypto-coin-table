@@ -1,4 +1,4 @@
-Coin table for the upcoming crypto app.
+Detailed table for the upcoming crypto app.
 
 🧑‍💻 Live demo here: https://totally-legit-crypto-coin-table.vercel.app/
 
