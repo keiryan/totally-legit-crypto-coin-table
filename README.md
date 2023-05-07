@@ -1,6 +1,6 @@
 A detailed reference table for the upcoming crypto app.
 
-_**(Now implemented)**_
+_**(Now implemented!)**_
 
 🧑‍💻 Live demo here: https://totally-legit-crypto-coin-table.vercel.app/
 
